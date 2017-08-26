@@ -1,4 +1,5 @@
 #include "scripting/js-bindings/manual/js_module_register.h"
+#include "js_custom_module_register.h"
 
 #include "scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_ui_auto.hpp"
@@ -114,6 +115,8 @@ int js_module_register()
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     sc->addRegisterCallback(JavaScriptObjCBridge::_js_register);
 #endif
+    
+    js_custom_module_register(sc);
     return 1;
 }
 

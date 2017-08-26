@@ -19,6 +19,15 @@
                   "*.cpp",
                   "*.hpp"
                ]
+            },
+            {
+               "from":"cocos/custom/",
+               "to":"frameworks/cocos2d-x/cocos/custom",
+               "include": [
+                  "*.h",
+                  "*.cpp",
+                  "*.hpp"
+               ]
             }
          ]
 

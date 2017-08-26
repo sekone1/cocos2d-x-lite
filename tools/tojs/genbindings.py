@@ -178,7 +178,9 @@ def main():
         #         _run_cmd('dos2unix *')
 
 
-        custom_cmd_args = {}
+        custom_cmd_args = {
+            'custom_my.ini' : ('custom_my', 'jsb_custom_my_auto'),
+        }
         if len(custom_cmd_args) > 0:
             output_dir = '%s/frameworks/custom/auto' % project_root
             for key in custom_cmd_args.keys():

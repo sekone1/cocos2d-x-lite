@@ -26,6 +26,7 @@
 #import "RootViewController.h"
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
+#import "Sdk.h"
 
 
 @implementation RootViewController
@@ -61,6 +62,8 @@ return self;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [UnityAds initialize:@"1499992" delegate:self];
+    SdkHandle::getInstance()->view = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -110,6 +113,35 @@ return self;
     [super didReceiveMemoryWarning];
 
     // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)unityAdsReady:(NSString *)placementId{
+    //[UnityAds show:self placementId:@"rewardedVideo"];
+    if(Sdk::getInstance()->getDelegate())
+        Sdk::getInstance()->getDelegate()->onAdsReady(Sdk::getInstance());
+}
+
+- (void)unityAdsDidError:(UnityAdsError)error withMessage:(NSString *)message{
+}
+
+- (void)unityAdsDidStart:(NSString *)placementId{
+}
+
+- (void)unityAdsDidFinish:(NSString *)placementId withFinishState:(UnityAdsFinishState)state{
+    Sdk::AdState tempState = Sdk::AdState::Error;
+    switch (state) {
+        case kUnityAdsFinishStateSkipped:
+            tempState = Sdk::AdState::Skipped;
+            break;
+        case kUnityAdsFinishStateCompleted:
+            tempState = Sdk::AdState::Completed;
+            break;
+        default:
+            break;
+    }
+
+    if(Sdk::getInstance()->getDelegate())
+        Sdk::getInstance()->getDelegate()->onAdsDidFinish(Sdk::getInstance(), tempState);
 }
 
 

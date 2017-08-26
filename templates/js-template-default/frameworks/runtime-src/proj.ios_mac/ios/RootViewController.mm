@@ -26,6 +26,8 @@
 #import "RootViewController.h"
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
+#import "Sdk.h"
+#import "IAPHelper.h"
 
 
 @implementation RootViewController
@@ -61,6 +63,12 @@ return self;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //[UnityAds initialize:@"1499992" delegate:self];
+    SdkHandle::getInstance()->view = self;
+    IAPHelper *a = [IAPHelper shared];
+    NSLog(@"================viewDidLoad");
+    //[a requestProduct:@"1"];
+    //[a purchaseProduct: @"1" productId:@"3" quantity:1];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -110,6 +118,45 @@ return self;
     [super didReceiveMemoryWarning];
 
     // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)unityAdsReady:(NSString *)placementId{
+    //[UnityAds show:self placementId:@"rewardedVideo"];
+    if(Sdk::getInstance()->getDelegate())
+        Sdk::getInstance()->getDelegate()->onAdsReady(Sdk::getInstance());
+}
+
+- (void)unityAdsDidError:(UnityAdsError)error withMessage:(NSString *)message{
+    CCLOG("=====unityAdsDidError:%s", message.UTF8String);
+}
+
+- (void)unityAdsDidStart:(NSString *)placementId{
+    CCLOG("======unityAdsDidStart:%s", placementId.UTF8String);
+}
+
+- (void)unityAdsDidFinish:(NSString *)placementId withFinishState:(UnityAdsFinishState)state{
+    Sdk::AdState tempState = Sdk::AdState::Error;
+    switch (state) {
+        case kUnityAdsFinishStateSkipped:
+            tempState = Sdk::AdState::Skipped;
+            break;
+        case kUnityAdsFinishStateCompleted:
+            tempState = Sdk::AdState::Completed;
+            break;
+        default:
+            break;
+    }
+    
+    //[IAPHelper requestProducts];
+    
+    CCLOG("======unityAdsDidFinish:%s", placementId.UTF8String);
+
+    if(Sdk::getInstance()->getDelegate()){
+        CCLOG("======unityAdsDidFinish state:%d", tempState);
+        Sdk::getInstance()->getDelegate()->onAdsDidFinish(Sdk::getInstance(), tempState);
+    }else{
+        CCLOG("======unityAdsDidFinish Sdk::getInstance()->getDelegate()=null");
+    }
 }
 
 

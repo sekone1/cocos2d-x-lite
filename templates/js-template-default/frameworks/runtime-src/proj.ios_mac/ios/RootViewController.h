@@ -24,9 +24,13 @@
  ****************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "UnityAds/UnityAds.h"
+
+//#include "Sdk.hpp"
+//using namespace cocos2d;
 
 
-@interface RootViewController : UIViewController {
+@interface RootViewController : UIViewController<UnityAdsDelegate>{
 
 }
 - (BOOL)prefersStatusBarHidden;
